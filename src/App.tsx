@@ -5,6 +5,7 @@ import {
   MapPin,
   Clock,
   ChevronRight,
+  ChevronLeft,
   X,
   Info,
   Lightbulb,
@@ -1537,14 +1538,22 @@ DayOverviewCard.displayName = "DayOverviewCard";
 const DayDetailPanel: React.FC<{
   day: DayData | null;
   onClose: () => void;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
   className?: string;
   showCloseButton?: boolean;
 }> = ({
   day,
   onClose,
+  onNext,
+  onPrevious,
+  hasNext = false,
+  hasPrevious = false,
   className = "",
   showCloseButton = true,
-}) => {
+}) => {  
   if (!day) {
     return (
       <div
@@ -1563,21 +1572,37 @@ const DayDetailPanel: React.FC<{
   return (
     <div
       className={`bg-card border-l border-border h-full flex flex-col ${className}`}
-    >
+    > 
       {/* Header */}
-      {showCloseButton && (
-        <div className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border p-4 md:p-6 flex items-center justify-between">
+      <div className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border p-4 md:p-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <h2 className="text-sm md:text-base font-medium text-foreground">
             Day Details
           </h2>
+          <button
+            onClick={onPrevious}
+            className="p-2 hover:bg-accent rounded-lg transition-colors touch-manipulation border border-border"
+            aria-label="Previous day"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={onNext}
+            className="p-2 hover:bg-accent rounded-lg transition-colors touch-manipulation border border-border"
+            aria-label="Next day"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        {showCloseButton && (
           <button
             onClick={onClose}
             className="p-1.5 hover:bg-accent rounded-lg transition-colors touch-manipulation"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
@@ -1795,6 +1820,40 @@ export default function App() {
     setIsDetailOpen(false);
   };
 
+  const handleNextDay = () => {
+    if (selectedDayIndex !== null && selectedDayIndex < dayData.length - 1) {
+      const nextIndex = selectedDayIndex + 1;
+      setSelectedDayIndex(nextIndex);
+      setSelectedDate(dayData[nextIndex].date);
+      
+      // Auto scroll to the next day card
+      if (scrollContainerRef.current && dayCardRefs.current[nextIndex]) {
+        dayCardRefs.current[nextIndex]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
+      }
+    }
+  };
+
+  const handlePreviousDay = () => {
+    if (selectedDayIndex !== null && selectedDayIndex > 0) {
+      const prevIndex = selectedDayIndex - 1;
+      setSelectedDayIndex(prevIndex);
+      setSelectedDate(dayData[prevIndex].date);
+      
+      // Auto scroll to the previous day card
+      if (scrollContainerRef.current && dayCardRefs.current[prevIndex]) {
+        dayCardRefs.current[prevIndex]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
+      }
+    }
+  };
+
   const filteredDays = dayData.filter((day) => {
     if (!searchTerm) return true;
     const searchText = searchTerm.toLowerCase();
@@ -1817,6 +1876,12 @@ export default function App() {
     selectedDayIndex !== null
       ? dayData[selectedDayIndex]
       : null;
+
+  // DEBUG: Log the selected day and navigation props
+  console.log('DEBUG: selectedDayIndex:', selectedDayIndex);
+  console.log('DEBUG: selectedDay:', selectedDay);
+  console.log('DEBUG: hasNext:', selectedDayIndex !== null && selectedDayIndex < dayData.length - 1);
+  console.log('DEBUG: hasPrevious:', selectedDayIndex !== null && selectedDayIndex > 0);
 
   return (
     <div className="h-screen bg-background flex overflow-hidden">
@@ -1886,6 +1951,10 @@ export default function App() {
                 <DayDetailPanel
                   day={selectedDay}
                   onClose={() => setIsDetailOpen(false)}
+                  onNext={handleNextDay}
+                  onPrevious={handlePreviousDay}
+                  hasNext={selectedDayIndex !== null && selectedDayIndex < dayData.length - 1}
+                  hasPrevious={selectedDayIndex !== null && selectedDayIndex > 0}
                   className="border-l-0"
                   showCloseButton={false}
                 />
@@ -1976,6 +2045,10 @@ export default function App() {
         <DayDetailPanel
           day={selectedDay}
           onClose={handleCloseDetail}
+          onNext={handleNextDay}
+          onPrevious={handlePreviousDay}
+          hasNext={selectedDayIndex !== null && selectedDayIndex < dayData.length - 1}
+          hasPrevious={selectedDayIndex !== null && selectedDayIndex > 0}
         />
       </div>
     </div>

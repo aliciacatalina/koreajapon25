@@ -13,7 +13,7 @@
     "deploy:build": "npm run build",
     "deploy:preview": "npm run preview",
     "deploy:static": "npm run build && echo 'Static files built in dist/ directory. Upload contents to your hosting provider.'",
-    "deploy:github-pages": "npm run build && cp -r dist/* . && echo 'Files copied to root for GitHub Pages deployment'"
+    "deploy:github-pages": "npm run build && cp -f dist/index.html ./index.html && cp -rf dist/assets ./"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
