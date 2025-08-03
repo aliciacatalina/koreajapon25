@@ -42,11 +42,29 @@ The project uses Vite to build a static website with the following configuration
 
 ## Deployment Options
 
-### GitHub Pages
+### GitHub Pages (Recommended)
 
-1. Build the project: `npm run build`
-2. Push the `dist/` directory to a `gh-pages` branch
-3. Enable GitHub Pages in your repository settings
+1. **Build and copy files to root:**
+   ```bash
+   npm run deploy:github-pages
+   ```
+
+2. **Commit and push the build files:**
+   ```bash
+   git add .
+   git commit -m "Deploy to GitHub Pages"
+   git push origin main
+   ```
+
+3. **Enable GitHub Pages:**
+   - Go to your repository Settings
+   - Scroll to "Pages" section
+   - Set source to "Deploy from a branch"
+   - Choose `main` branch
+   - Set folder to `/ (root)`
+   - Save
+
+4. **Your site will be available at:** `https://yourusername.github.io/your-repo-name/`
 
 ### Netlify
 
@@ -94,6 +112,7 @@ dist/
 - Source maps are disabled for production builds
 - Small assets (< 4KB) are inlined as base64 for better performance
 - Source code is organized in the `src/` directory for better project structure
+- For GitHub Pages, use `npm run deploy:github-pages` to copy files to root
 
 ## Troubleshooting
 
@@ -101,4 +120,5 @@ If you encounter issues with asset loading:
 1. Ensure your hosting provider serves the files correctly
 2. Check that the `dist/` directory is uploaded completely
 3. Verify that your hosting provider supports the file types (HTML, JS, CSS)
-4. For subdirectory deployments, ensure the base URL is configured correctly 
+4. For subdirectory deployments, ensure the base URL is configured correctly
+5. For GitHub Pages, make sure the build files are committed to the repository 
