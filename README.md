@@ -41,14 +41,18 @@ A modern, responsive travel itinerary application for a 15-day Korea and Japan t
 ## Project Structure
 
 ```
-├── App.tsx                 # Main application component
-├── components/
-│   └── ui/                 # Reusable UI components
-│       ├── button.tsx
-│       ├── sheet.tsx
-│       └── utils.ts
-├── styles/
-│   └── globals.css         # Tailwind CSS configuration
+├── src/                    # Source code
+│   ├── App.tsx            # Main application component
+│   ├── main.tsx           # Application entry point
+│   ├── components/
+│   │   └── ui/            # Reusable UI components
+│   │       ├── button.tsx
+│   │       ├── sheet.tsx
+│   │       └── utils.ts
+│   └── styles/
+│       └── globals.css    # Tailwind CSS configuration
+├── dist/                  # Build output (generated)
+├── index.html             # HTML entry point
 └── README.md
 ```
 
